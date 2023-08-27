@@ -56,6 +56,77 @@ func fetchAndValidateInput(inputReader *bufio.Reader) (time.Time, int64) {
 	return inputDate, businessDays
 }
 
+func calculateEndDate(inputDate time.Time, businessDays int64, holidayList map[time.Time]bool) time.Time {
+	counter := 0
+	currentDate := inputDate
+	businessDaysEntered := businessDays
+	addDay := 1
+
+	fullWeeks := businessDays / 5
+	remainingDays := businessDays % 5
+	weekendsInFullWeeks := fullWeeks * 2
+	remainHolidays := weekendsInFullWeeks
+
+	if remainingDays > 0 {
+		for i := 0; i <= int(remainingDays); i++ {
+			counter = counter + 1
+			if !holidayList[currentDate] && currentDate.Weekday() != time.Saturday && currentDate.Weekday() != time.Sunday {
+				// continue
+			} else {
+				weekendsInFullWeeks++
+			}
+			currentDate = currentDate.AddDate(0, 0, 1)
+		}
+		fmt.Println("First loop iteration", counter)
+	} else {
+		for remainHolidays != 0 {
+			counter++
+			if !holidayList[currentDate] {
+				//continue
+			} else {
+				fmt.Println(currentDate)
+				weekendsInFullWeeks++
+			}
+			currentDate = currentDate.AddDate(0, 0, 1)
+			remainHolidays--
+		}
+
+	}
+	fmt.Println("Second loop iteration", counter)
+
+	// fmt.Println("Current Date:", currentDate)
+	if inputDate.Weekday() == time.Sunday {
+		weekendsInFullWeeks--
+	}
+
+	totalWeekends := weekendsInFullWeeks
+	totalDaysToAdd := businessDays + totalWeekends
+	endDate := inputDate.AddDate(0, 0, int(totalDaysToAdd))
+
+	if businessDaysEntered < 0 {
+		addDay = -1
+	}
+
+	counter2 := 0
+	for holidayList[endDate] || endDate.Weekday() == time.Saturday || endDate.Weekday() == time.Sunday {
+		counter2++
+		endDate = endDate.AddDate(0, 0, addDay)
+	}
+	fmt.Println("Third loop iteration", counter2)
+	// endDate = endDate.AddDate(0, 0, addDay)
+	return endDate
+}
+
+// fetches input
+func fetchInput() string {
+	inputReader := bufio.NewReader(os.Stdin)
+	line, _ := inputReader.ReadString('\n')
+	line = strings.TrimSpace(line)
+	return line
+}
+
+//2023-08-25
+
 // Calculates relative date by adding/subtracting business days from a given date
 // func calculateRelativeDate(inputDate time.Time, businessDays int64, holidayList map[time.Time]bool) time.Time {
 // 	var startDate time.Time
@@ -83,60 +154,3 @@ func fetchAndValidateInput(inputReader *bufio.Reader) (time.Time, int64) {
 // 	fmt.Println(iterations)
 // 	return startDate
 // }
-
-func calculateEndDate(inputDate time.Time, businessDays int64, holidayList map[time.Time]bool) time.Time {
-	counter := 0
-	currentDate := inputDate
-	businessDaysEntered := businessDays
-	addDay := 1
-
-	fullWeeks := businessDays / 5
-	remainingDays := businessDays % 5
-	weekendsInFullWeeks := fullWeeks * 2
-
-	if remainingDays > 0 {
-		for i := 0; i < int(remainingDays); i++ {
-			counter = counter + 1
-			if !holidayList[currentDate] && currentDate.Weekday() != time.Saturday && currentDate.Weekday() != time.Sunday {
-			} else {
-				fmt.Println("entered")
-				weekendsInFullWeeks++
-			}
-			currentDate = currentDate.AddDate(0, 0, 1)
-		}
-		fmt.Println("First loop iteration", counter)
-	}
-
-	// fmt.Println("Current Date:", currentDate)
-	if inputDate.Weekday() == time.Sunday {
-		weekendsInFullWeeks--
-	}
-	fmt.Println(weekendsInFullWeeks)
-	totalWeekends := weekendsInFullWeeks
-	totalDaysToAdd := businessDays + totalWeekends
-	endDate := inputDate.AddDate(0, 0, int(totalDaysToAdd))
-
-	if businessDaysEntered < 0 {
-		addDay = -1
-	}
-
-	counter2 := 0
-	for holidayList[endDate] || endDate.Weekday() == time.Saturday || endDate.Weekday() == time.Sunday {
-		counter2++
-		endDate = endDate.AddDate(0, 0, addDay)
-		fmt.Println(endDate)
-	}
-	fmt.Println("Second loop iteration", counter2)
-
-	return endDate
-}
-
-// fetches input
-func fetchInput() string {
-	inputReader := bufio.NewReader(os.Stdin)
-	line, _ := inputReader.ReadString('\n')
-	line = strings.TrimSpace(line)
-	return line
-}
-
-//2023-08-25
