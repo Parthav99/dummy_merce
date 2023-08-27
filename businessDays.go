@@ -61,7 +61,12 @@ func calculateEndDate(inputDate time.Time, businessDays int64, holidayList map[t
 	currentDate := inputDate
 	businessDaysEntered := businessDays
 	addDay := 1
-
+	checkDay := 1
+	if businessDays < 0 {
+		businessDays=-businessDays
+		checkDay=-1
+	}
+	
 	fullWeeks := businessDays / 5
 	remainingDays := businessDays % 5
 	weekendsInFullWeeks := fullWeeks * 2
@@ -75,7 +80,7 @@ func calculateEndDate(inputDate time.Time, businessDays int64, holidayList map[t
 			} else {
 				weekendsInFullWeeks++
 			}
-			currentDate = currentDate.AddDate(0, 0, 1)
+			currentDate = currentDate.AddDate(0, 0, checkDay)
 		}
 		fmt.Println("First loop iteration", counter)
 	} else {
@@ -87,10 +92,9 @@ func calculateEndDate(inputDate time.Time, businessDays int64, holidayList map[t
 				fmt.Println(currentDate)
 				weekendsInFullWeeks++
 			}
-			currentDate = currentDate.AddDate(0, 0, 1)
+			currentDate = currentDate.AddDate(0, 0, checkDay)
 			remainHolidays--
 		}
-
 	}
 	fmt.Println("Second loop iteration", counter)
 
@@ -101,6 +105,9 @@ func calculateEndDate(inputDate time.Time, businessDays int64, holidayList map[t
 
 	totalWeekends := weekendsInFullWeeks
 	totalDaysToAdd := businessDays + totalWeekends
+	if businessDaysEntered < 0 {
+		totalDaysToAdd = -totalDaysToAdd
+	}
 	endDate := inputDate.AddDate(0, 0, int(totalDaysToAdd))
 
 	if businessDaysEntered < 0 {
