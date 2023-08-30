@@ -62,19 +62,22 @@ func countWorkday(inputDate1 time.Time, inputDate2 time.Time, holidayList map[ti
 
 	if remainingDays > 0 {
 		for i := 0; i < int(remainingDays); i++ {
-			if holidayList[currentDate] || currentDate.Weekday() == time.Saturday || currentDate.Weekday() == time.Sunday {
+			if currentDate.Weekday() == time.Saturday || currentDate.Weekday() == time.Sunday {
 				weekendDays++
 			}
 			currentDate = currentDate.AddDate(0, 0, 1)
 		}
+	}	
+
+	totalWeekDays := totalDays - (weekendDays + len(holidayList))
+
+	//adjust for weekends
+	if totalWeekDays < 0 {
+		totalWeekDays++
 	}
 
-	totalWeekDays := totalDays - (weekendDays)
-	fmt.Println(totalDays)
-	fmt.Println(weekendDays)
 	return totalWeekDays
 }
-
 
 /************************Normal Approach**************************************/
 // func countWorkday(inputDate1 time.Time, inputDate2 time.Time, holidayList map[time.Time]bool) int {
@@ -104,7 +107,6 @@ func countWorkday(inputDate1 time.Time, inputDate2 time.Time, holidayList map[ti
 // 	return countWeekDays
 // }
 
-
 // Calculates number of workdays between two dates
 // func countWorkday(inputDate1 time.Time, inputDate2 time.Time, holidayList map[time.Time]bool) int {
 // 	countWeekDays := 0
@@ -120,7 +122,7 @@ func countWorkday(inputDate1 time.Time, inputDate2 time.Time, holidayList map[ti
 /************************Logic Used**************************************/
 //hoursBetweenDates := inputDate2.Sub(inputDate1) ---
 // totalDays := int(hoursBetweenDates.Hours() / 24) ---
-//range over holidaylist ---
+//if first date and second date
 // holidays++ ----
 //weekendDays := (totalDays / 7) * 2 ---
 //remaining := totalDays % 7 ---
