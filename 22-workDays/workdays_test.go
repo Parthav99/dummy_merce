@@ -12,7 +12,8 @@ var testcases = []struct {
 	expected    int
 	holidayList map[time.Time]bool
 }{
-	{"sameDay", time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC), 1, map[time.Time]bool{}},
+	{"sameDayWorkDay", time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC), 1, map[time.Time]bool{}},
+	{"sameDayHoliDay", time.Date(2023, 8, 19, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 19, 0, 0, 0, 0, time.UTC), 0, map[time.Time]bool{}},
 	{"startDateHoliday", time.Date(2023, 8, 19, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 21, 0, 0, 0, 0, time.UTC), 1, map[time.Time]bool{}},
 	{"endDateHoliday", time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 19, 0, 0, 0, 0, time.UTC), 1, map[time.Time]bool{}},
 	{"multipleHolidaysInRow", time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 24, 0, 0, 0, 0, time.UTC), 0, map[time.Time]bool{
@@ -25,10 +26,12 @@ var testcases = []struct {
 		time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC): true,
 	}},
 	{"noRemaining", time.Date(2023, 8, 1, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 15, 0, 0, 0, 0, time.UTC), 10, map[time.Time]bool{}},
-	{"holidaysInBetween", time.Date(2023, 8, 1, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC), 10, map[time.Time]bool{
-		time.Date(2023, 8, 9, 0, 0, 0, 0, time.UTC): true,
-		time.Date(2023, 8, 16, 0, 0, 0, 0, time.UTC): true,
-		time.Date(2023, 8, 14, 0, 0, 0, 0, time.UTC): true,
+	{"holidaysInBetween", time.Date(2023, 8, 1, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 11, 0, 0, 0, 0, time.UTC), 7, map[time.Time]bool{
+		time.Date(2023, 8, 9, 0, 0, 0, 0, time.UTC):  true,
+		time.Date(2023, 9, 16, 0, 0, 0, 0, time.UTC): true, //odd man
+		time.Date(2023, 8, 14, 0, 0, 0, 0, time.UTC): true, //odd man
+		time.Date(2023, 10, 14, 0, 0, 0, 0, time.UTC): true, //odd man
+		time.Date(2023, 8, 14, 0, 0, 0, 0, time.UTC): true, //odd man
 	}},
 }
 
