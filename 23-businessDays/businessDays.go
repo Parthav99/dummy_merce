@@ -56,8 +56,6 @@ func FetchAndValidateInput(inputReader *bufio.Reader) (time.Time, int64) {
 	return inputDate, businessDays
 }
 
-//2023-08-25
-
 func CalculateEndDate(inputDate time.Time, businessDays int64, holidayList map[time.Time]bool) time.Time {
 
 	//initializations
@@ -73,17 +71,17 @@ func CalculateEndDate(inputDate time.Time, businessDays int64, holidayList map[t
 		checkDay = -1
 	}
 
-	// weekAfterHolidays
-
 	weeks := businessDays / 5         //converts business days into whole weeks
 	remainingDays := businessDays % 5 //days which remain after converting to weeks
+	weeksWithHolidays := (len(holidayList) + int(weeks)) / 5
 
-	if (weeks != 0 && remainingDays == 0) || (businessDays < 0 && remainingDays == 0) { //check?
-		weeks = weeks + 1 //do this conditionally
+	if (businessDays > 0 && weeks != 0 && remainingDays == 0) || (businessDays < 0 && remainingDays == 0) { //check?
+		for int(weeks) <= weeksWithHolidays {
+			weeks = weeks + 1 //do this conditionally
+		}
 	}
 
 	weekendDaysPerWeek := weeks * 2 // weekends per week
-	//converts business days into whole weeks
 
 	//iterates over remaining days and increments the weekend days
 	if remainingDays > 0 {
@@ -95,23 +93,13 @@ func CalculateEndDate(inputDate time.Time, businessDays int64, holidayList map[t
 		}
 	}
 
-	// Adjusts the days to be added if start day is a Sunday
-	// if inputDate.Weekday() == time.Saturday || inputDate.Weekday() == time.Sunday || holidayList[inputDate] {
-	// 	weekendDaysPerWeek--
-	// }
-
-	// + int64(len(holidayList))
 	var checkEnd time.Time
-	addDays := weekendDaysPerWeek + businessDays
+	addDays := weekendDaysPerWeek + businessDays + int64(len(holidayList))
 	if businessDaysEntered < 0 {
 		checkEnd = inputDate.AddDate(0, 0, -int(addDays))
 	} else {
 		checkEnd = inputDate.AddDate(0, 0, int(addDays))
 	}
-
-	// if businessDaysEntered < 0 {
-	// 	inputDate, checkEnd = checkEnd, inputDate
-	// }
 
 	for holidays := range holidayList {
 		if (inputDate.Before(holidays) && checkEnd.After(holidays)) || holidays == checkEnd {
@@ -127,6 +115,7 @@ func CalculateEndDate(inputDate time.Time, businessDays int64, holidayList map[t
 
 	fmt.Println("WeekendDays", weekendDaysPerWeek)
 	fmt.Println("Holidays", holiday)
+
 	//Calculating days to be added in order to get the end date
 	totalHolidays := weekendDaysPerWeek + int64(holiday)
 	totalDaysToAdd := businessDays + totalHolidays
