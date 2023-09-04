@@ -19,8 +19,7 @@ func main() {
 	fileUrl := os.Args[1]
 
 	if len(os.Args) != 2 {
-		fmt.Println("Incorrect number of arguments provided. Please provide only one argument.")
-		os.Exit(1)
+		log.Fatal("Incorrect number of arguments provided. Please provide only one argument.")
 	}
 
 	//Skipping ssl verification

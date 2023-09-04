@@ -53,7 +53,6 @@ func main() {
 func handleError(err error) {
 	if err != nil {
 		log.Fatal("\n", err)
-		os.Exit(1)
 	}
 }
 

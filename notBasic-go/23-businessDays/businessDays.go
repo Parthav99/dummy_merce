@@ -5,7 +5,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -21,7 +20,7 @@ func main() {
 
 		//break condition
 		if holidayStr == "stop" {
-			inputDate, businessDays := FetchAndValidateInput(inputReader)
+			inputDate, businessDays := inputs.FetchAndValidateInput(inputReader)
 			relativeDate := CalculateEndDate(inputDate, businessDays, holidayList)
 			fmt.Println("Relative Date is", relativeDate.Format("2006-01-02"))
 			break
@@ -37,24 +36,6 @@ func main() {
 	}
 }
 
-//fetches and validates two input
-func FetchAndValidateInput(inputReader *bufio.Reader) (time.Time, int64) {
-	fmt.Print("Enter Date(YYYY-MM-DD): ")
-	inputDateStr1 := inputs.FetchInput()
-	fmt.Print("Enter business days: ")
-	daysStr := inputs.FetchInput()
-
-	inputDate, errDate1 := time.Parse("2006-01-02", inputDateStr1)
-	businessDays, errDays := strconv.ParseInt(daysStr, 10, 64)
-
-	if errDate1 != nil || errDays != nil {
-		fmt.Println("Invalid input. Please follow the format")
-		os.Exit(1)
-	}
-
-	return inputDate, businessDays
-}
-
 func CalculateEndDate(inputDate time.Time, businessDays int64, holidayList map[time.Time]bool) time.Time {
 
 	//initializations
@@ -63,6 +44,12 @@ func CalculateEndDate(inputDate time.Time, businessDays int64, holidayList map[t
 	addDay := 1
 	checkDay := 1
 	holiday := 0
+
+	//Check if businessDays are entered
+	if businessDays == 0 {
+		fmt.Println("No BusinessDays were entered")
+		return inputDate
+	}
 
 	//check if negative business days are entered
 	if businessDaysEntered < 0 {
@@ -83,11 +70,8 @@ func CalculateEndDate(inputDate time.Time, businessDays int64, holidayList map[t
 	weekendDaysPerWeek := weeks * 2 // weekends per week
 	//iterates over remaining days and increments the weekend days
 	if remainingDays > 0 {
-		fmt.Println("Outside for:", currentDate)
 		for i := 0; i < int(remainingDays); i++ {
-			fmt.Println("Inside for:", currentDate)
 			if (currentDate.Weekday() == time.Saturday || currentDate.Weekday() == time.Sunday) && currentDate != inputDate {
-				fmt.Println("Inside if:", currentDate)
 				weekendDaysPerWeek++
 			}
 			currentDate = currentDate.AddDate(0, 0, checkDay)
@@ -133,7 +117,7 @@ func CalculateEndDate(inputDate time.Time, businessDays int64, holidayList map[t
 	notSunday := endDate
 
 	for holidayList[endDate] || endDate.Weekday() == time.Saturday || endDate.Weekday() == time.Sunday {
-		if endDate.Weekday() == time.Sunday && notSunday.Weekday()!=time.Saturday { //condition -> Sunday, but if it is saturday then it comes to sunday and increments
+		if endDate.Weekday() == time.Sunday && notSunday.Weekday() != time.Saturday && inputDate.Weekday() != time.Saturday { //condition -> Sunday, but if it is saturday then it comes to sunday and increments
 			endDate = endDate.AddDate(0, 0, addDay)
 		}
 		endDate = endDate.AddDate(0, 0, addDay)

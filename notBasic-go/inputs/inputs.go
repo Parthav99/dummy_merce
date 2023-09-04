@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -40,4 +41,20 @@ func FetchAndValidateDates(inputReader *bufio.Reader) (time.Time, time.Time) {
 
 		return inputDate1, inputDate2
 	}
+}
+
+func FetchAndValidateInput(inputReader *bufio.Reader) (time.Time, int64) {
+	fmt.Print("Enter Date(YYYY-MM-DD): ")
+	inputDateStr1 := FetchInput()
+	fmt.Print("Enter business days: ")
+	daysStr := FetchInput()
+
+	inputDate, errDate1 := time.Parse("2006-01-02", inputDateStr1)
+	businessDays, errDays := strconv.ParseInt(daysStr, 10, 64)
+
+	if errDate1 != nil || errDays != nil {
+		log.Fatal("Invalid input. Please follow the format")
+	}
+
+	return inputDate, businessDays
 }

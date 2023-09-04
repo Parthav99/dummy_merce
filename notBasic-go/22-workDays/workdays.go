@@ -37,6 +37,7 @@ func main() {
 }
 
 func countWorkday(inputDate1 time.Time, inputDate2 time.Time, holidayList map[time.Time]bool) int {
+	
 	//initializations
 	countWeekDays := 0
 	holiday := 0
@@ -79,8 +80,13 @@ func countWorkday(inputDate1 time.Time, inputDate2 time.Time, holidayList map[ti
 		}
 	}
 
-	if inputDate2.Weekday() == time.Sunday { //issue with this condition, add another check
+	if inputDate2.Weekday() == time.Sunday {
 		totalDays--
+	}
+
+	//considering the first date
+	if inputDate2.Weekday() == time.Saturday {
+		totalDays++
 	}
 
 	totalWeekDays := totalDays - (weekendDays + holiday)

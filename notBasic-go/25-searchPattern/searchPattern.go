@@ -4,7 +4,7 @@ package main
 import (
 	"assignmentDependencies/inputs"
 	"fmt"
-	"os"
+	"log"
 	"regexp"
 )
 
@@ -19,8 +19,7 @@ func main() {
 		// Break condition
 		if inputStr == "done" {
 			if len(nameList) == 0 {
-				fmt.Println("List is empty, nothing to search.")
-				os.Exit(1)
+				log.Fatal("List is empty, nothing to search.")
 			}
 			break
 		}

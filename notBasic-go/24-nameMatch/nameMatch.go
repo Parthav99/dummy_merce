@@ -13,7 +13,7 @@ func main() {
 	//writes input into the map(nameList)
 	for {
 		fmt.Print("Enter names of candidates or done: ")
-		inputStr := strings.ToLower(inputs.FetchInput())
+		inputStr := inputs.FetchInput()
 		//Break condition
 		if inputStr == "done" {
 			break

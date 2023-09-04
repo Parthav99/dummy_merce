@@ -13,7 +13,7 @@ var testcases = []struct {
 	expected    int
 	holidayList map[time.Time]bool
 }{
-	{"sameDayWorkDay", time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 20, 0, 0, 0, 0, time.UTC), 1, map[time.Time]bool{}},
+	{"sameDayWorkDay", time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 18, 0, 0, 0, 0, time.UTC), 1, map[time.Time]bool{}},
 	{"sameDayHoliDay", time.Date(2023, 8, 19, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 19, 0, 0, 0, 0, time.UTC), 0, map[time.Time]bool{}},
 	{"startDateHoliday", time.Date(2023, 8, 19, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 21, 0, 0, 0, 0, time.UTC), 1, map[time.Time]bool{}},
 	{"endDateHoliday", time.Date(2023, 9, 1, 0, 0, 0, 0, time.UTC), time.Date(2023, 9, 3, 0, 0, 0, 0, time.UTC), 0, map[time.Time]bool{}},
@@ -39,7 +39,7 @@ var testcases = []struct {
 func TestCountWorkDay(t *testing.T) {
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			assert.Equal(t,tc.expected, countWorkday(tc.inputDate1, tc.inputDate2, tc.holidayList))
+			assert.Equal(t, tc.expected, countWorkday(tc.inputDate1, tc.inputDate2, tc.holidayList))
 			// // arrange
 			// expected := tc.expected
 			// // act

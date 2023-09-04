@@ -14,7 +14,7 @@ var testcases = []struct {
 	expected     time.Time //negative with holidays
 	holidayList  map[time.Time]bool
 }{
-	{"oneValue", 1, time.Date(2023, 8, 24, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 25, 0, 0, 0, 0, time.UTC), map[time.Time]bool{}},
+	{"oneValue", 1, time.Date(2023, 9, 9, 0, 0, 0, 0, time.UTC), time.Date(2023, 9, 11, 0, 0, 0, 0, time.UTC), map[time.Time]bool{}},
 	{"sundayStart", 1, time.Date(2023, 8, 6, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 7, 0, 0, 0, 0, time.UTC), map[time.Time]bool{}},
 	{"zeroValue", 0, time.Date(2023, 8, 24, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 24, 0, 0, 0, 0, time.UTC), map[time.Time]bool{}},
 	{"multipleHolidays", 5, time.Date(2023, 8, 24, 0, 0, 0, 0, time.UTC), time.Date(2023, 9, 15, 0, 0, 0, 0, time.UTC), map[time.Time]bool{
@@ -47,8 +47,8 @@ var testcases = []struct {
 	}},
 	{"negativeValue", 6, time.Date(2023, 9, 5, 0, 0, 0, 0, time.UTC), time.Date(2023, 9, 18, 0, 0, 0, 0, time.UTC), map[time.Time]bool{
 		//check for -10,-5,-7,-3
-		time.Date(2023, 9, 6, 0, 0, 0, 0, time.UTC):  true,
-		time.Date(2023, 9, 7, 0, 0, 0, 0, time.UTC):  true,
+		time.Date(2023, 9, 6, 0, 0, 0, 0, time.UTC): true,
+		time.Date(2023, 9, 7, 0, 0, 0, 0, time.UTC): true,
 		time.Date(2023, 9, 8, 0, 0, 0, 0, time.UTC): true,
 	}},
 	{"holidaysInBetween", 11, time.Date(2023, 8, 1, 0, 0, 0, 0, time.UTC), time.Date(2023, 8, 17, 0, 0, 0, 0, time.UTC), map[time.Time]bool{
